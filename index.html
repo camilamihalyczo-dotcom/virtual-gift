@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>zine_cumple.png ૮ ˶ᵔ ᵕ ᵔ˶ ა</title>
+  <style>
+    :root {
+      --bg-gradient-1: #ffd8ec;
+      --bg-gradient-2: #d6e6ff;
+      --window-blue: #9cbdf8;
+      --window-blue-dark: #507ccb;
+      --bubble-pink: #ffeaf4;
+      --border-pink: #f48fb1;
+      --border-blue: #90b8f8;
+      --heart-pink: #ff4081;
+      --text-main: #334155;
+      --text-muted: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Courier New', Courier, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace, sans-serif;
+      font-weight: 700;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--bg-gradient-1) 0%, #ffffff 50%, var(--bg-gradient-2) 100%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      padding: 14px 10px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 700;
+    }
+
+    .retro-window {
+      width: 100%;
+      max-width: 440px;
+      background: #ffffff;
+      border: 3px solid var(--window-blue);
+      border-radius: 20px;
+      box-shadow: 0 12px 28px rgba(144, 184, 248, 0.45);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Barra Superior */
+    .title-bar {
+      background: var(--window-blue);
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+
+    .window-title {
+      font-weight: bold;
+      font-size: 0.92rem;
+      color: #1e293b;
+    }
+
+    .window-controls {
+      display: flex;
+      gap: 6px;
+    }
+
+    .win-btn {
+      width: 15px;
+      height: 15px;
+      border: 1.5px solid #1e293b;
+      background: #ffffff;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: bold;
+      color: #1e293b;
+    }
+
+    /* Contenedor del Libro */
+    .book-container {
+      padding: 18px 14px;
+      background: radial-gradient(#ebf3ff 1.5px, transparent 1.5px);
+      background-size: 16px 16px;
+      background-color: #fcfdff;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Páginas */
+    .page {
+      display: none;
+      animation: flipIn 0.35s cubic-bezier(0.2, 0.9, 0.3, 1);
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes flipIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Tarjetas / Páginas estilo Zine */
+    .zine-card {
+      background: #ffffff;
+      border: 2px solid var(--border-pink);
+      border-radius: 18px;
+      padding: 20px 16px;
+      box-shadow: 4px 4px 0px var(--border-pink);
+      position: relative;
+    }
+
+    .zine-card.blue-theme {
+      border-color: var(--border-blue);
+      box-shadow: 4px 4px 0px var(--border-blue);
+    }
+
+    .page-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: bold;
+      padding: 4px 10px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    .tag-pink {
+      color: #d81b60;
+      background: var(--bubble-pink);
+      border: 1px dashed var(--border-pink);
+    }
+
+    .tag-blue {
+      color: var(--window-blue-dark);
+      background: #eef5ff;
+      border: 1px dashed var(--border-blue);
+    }
+
+    .zine-title {
+      font-size: 1.35rem;
+      color: #1e293b;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .zine-desc {
+      font-size: 0.9rem;
+      color: var(--text-main);
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .meta-box {
+      background: #f8fafc;
+      border: 1.5px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.85rem;
+      margin-bottom: 14px;
+    }
+
+    .meta-box strong {
+      color: #1e293b;
+    }
+
+    /* Botón Corazón dentro de la página */
+    .heart-action-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 8px;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    .btn-heart-page {
+      background: #ffffff;
+      border: 2px solid var(--border-pink);
+      color: var(--text-muted);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 2px 2px 0px var(--border-pink);
+      transition: all 0.2s ease;
+    }
+
+    .btn-heart-page.liked {
+      background: var(--bubble-pink);
+      color: var(--heart-pink);
+      border-color: var(--heart-pink);
+      transform: scale(1.03);
+    }
+
+    .talk-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .talk-face {
+      position: relative;
+      width: 52px;
+      height: 32px;
+      background: #fff7fb;
+      border: 2px solid var(--border-pink);
+      border-radius: 50% 50% 42% 42%;
+      box-shadow: inset 0 -3px 0 rgba(244, 143, 177, 0.18);
+      flex-shrink: 0;
+    }
+
+    .talk-face .eye {
+      position: absolute;
+      top: 11px;
+      width: 5px;
+      height: 5px;
+      background: #1e293b;
+      border-radius: 50%;
+    }
+
+    .talk-face .eye.left { left: 13px; }
+    .talk-face .eye.right { right: 13px; }
+
+    .talk-face .mouth {
+      position: absolute;
+      left: 50%;
+      bottom: 7px;
+      width: 18px;
+      height: 10px;
+      transform: translateX(-50%);
+      border-bottom: 3px solid #1e293b;
+      border-radius: 0 0 16px 16px;
+      animation: talk 0.45s ease-in-out infinite alternate;
+    }
+
+    @keyframes talk {
+      from {
+        height: 8px;
+        border-bottom-width: 2px;
+      }
+      to {
+        height: 13px;
+        border-bottom-width: 4px;
+      }
+    }
+
+    .speech-bubble {
+      position: relative;
+      background: #fff7fb;
+      border: 2px solid var(--border-pink);
+      border-radius: 12px;
+      padding: 6px 8px;
+      font-size: 0.66rem;
+      line-height: 1.2;
+      color: #3f3a52;
+      box-shadow: 2px 2px 0 rgba(244, 143, 177, 0.35);
+      max-width: 126px;
+    }
+
+    .speech-bubble::before {
+      content: "";
+      position: absolute;
+      left: -8px;
+      top: 10px;
+      width: 10px;
+      height: 10px;
+      background: #fff7fb;
+      border-left: 2px solid var(--border-pink);
+      border-bottom: 2px solid var(--border-pink);
+      transform: rotate(45deg);
+    }
+
+    .zine-card.blue-theme .talk-face {
+      border-color: var(--border-blue);
+      background: #f3f8ff;
+      box-shadow: inset 0 -3px 0 rgba(144, 184, 248, 0.18);
+    }
+
+    .zine-card.blue-theme .speech-bubble {
+      background: #f3f8ff;
+      border-color: var(--border-blue);
+      box-shadow: 2px 2px 0 rgba(144, 184, 248, 0.35);
+    }
+
+    .zine-card.blue-theme .speech-bubble::before {
+      background: #f3f8ff;
+      border-left-color: var(--border-blue);
+      border-bottom-color: var(--border-blue);
+    }
+
+    /* Tabla Comparativa en la Zine */
+    .table-box {
+      background: #ffffff;
+      border: 2px solid var(--window-blue);
+      border-radius: 14px;
+      box-shadow: 3px 3px 0px var(--window-blue);
+      overflow: hidden;
+      margin: 10px 0 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    th {
+      background: #eef5ff;
+      color: var(--window-blue-dark);
+      padding: 8px 10px;
+      text-align: left;
+      font-weight: bold;
+      border-bottom: 1.5px solid var(--window-blue);
+    }
+
+    td {
+      padding: 9px 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Botón WhatsApp */
+    .btn-wa {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      background: var(--bubble-pink);
+      color: #c2185b;
+      border: 2px solid var(--border-pink);
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.95rem;
+      padding: 13px;
+      border-radius: 14px;
+      box-shadow: 3px 3px 0px var(--border-pink);
+      margin-top: 10px;
+    }
+
+    /* Barra de Navegación / Pasapáginas */
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1.5px dashed #cbd5e1;
+    }
+
+    .btn-nav {
+      background: #ffffff;
+      border: 2px solid var(--window-blue);
+      color: var(--window-blue-dark);
+      font-weight: bold;
+      font-size: 0.85rem;
+      padding: 8px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 2px 2px 0px var(--window-blue);
+      transition: all 0.15s ease;
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .page-indicator {
+      font-size: 0.82rem;
+      font-weight: bold;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="retro-window">
+    
+    <!-- Barra Superior -->
+    <div class="title-bar">
+      <div class="window-title">✧ zine_cumple.png ✧</div>
+      <div class="window-controls">
+        <span class="win-btn">_</span>
+        <span class="win-btn">□</span>
+        <span class="win-btn">✕</span>
+      </div>
+    </div>
+
+    <!-- Contenedor Revista / Cuadernillo -->
+    <div class="book-container">
+
+      <!-- PÁGINA 1: PORTADA -->
+      <div class="page active" id="p1">
+        <div class="zine-card" style="text-align: center; padding: 30px 18px;">
+          <div class="page-tag tag-pink">★ Portada ★</div>
+          <h1 class="zine-title" style="font-size: 1.5rem;">Elegí el plan que más te guste</h1>
+          <p class="zine-desc">Armé esta selección para tu cumple. Pasá las páginas para ver de qué trata cada una y compará los días con tus francos para elegir a cuál vamos. ✧･ﾟ:*</p>
+          <div style="font-size: 2.2rem; margin: 15px 0;">📖✨</div>
+        </div>
+      </div>
+
+      <!-- PÁGINA 2: ANASTASIA -->
+      <div class="page" id="p2">
+        <div class="zine-card">
+          <div class="page-tag tag-pink">01 / 04 · Musical Dramático</div>
+          <h2 class="zine-title">👑 Anastasia</h2>
+          <p class="zine-desc">Superproducción de época basada en la historia de la gran duquesa rusa y el París de los años 20. Gran despliegue visual, orquesta en vivo y baladas potentes. Protagonizada por Minerva Casero.</p>
+          <div class="meta-box">
+            <div><strong>Lugar:</strong> Teatro Astral (Av. Corrientes 1639)</div>
+            <div><strong>Horarios:</strong> Mar y Mié 20:00 hs · Sáb 16:00 hs</div>
+            <div><strong>Estilo:</strong> Aventura épica / Broadway</div>
+          </div>
+          <div class="heart-action-row">
+            <button class="btn-heart-page" onclick="toggleLike(this, 'Anastasia')">♥ Me gusta esta</button>
+            <div class="talk-wrap">
+              <div class="talk-face" aria-label="cara hablando">
+                <span class="eye left"></span>
+                <span class="eye right"></span>
+                <span class="mouth"></span>
+              </div>
+              <div class="speech-bubble">Épica, glamour y mucha historia!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PÁGINA 3: ANNIE -->
+      <div class="page" id="p3">
+        <div class="zine-card blue-theme">
+          <div class="page-tag tag-blue">02 / 04 · Musical Clásico</div>
+          <h2 class="zine-title">🐶 Annie</h2>
+          <p class="zine-desc">El clásico de Broadway en formato tradicional de gran producción. Coreografías de ensamble, canciones icónicas y elenco encabezado por Lizy Tagliani y Miguel Ángel Rodríguez.</p>
+          <div class="meta-box">
+            <div><strong>Lugar:</strong> Teatro Broadway (Av. Corrientes 1155)</div>
+            <div><strong>Horarios:</strong> Jue y Vie 20:00 hs · Dom 15:30 y 18:30 hs</div>
+            <div><strong>Estilo:</strong> Comedia musical / Dinámica</div>
+          </div>
+          <div class="heart-action-row">
+            <button class="btn-heart-page" onclick="toggleLike(this, 'Annie')">♥ Me gusta esta</button>
+            <div class="talk-wrap">
+              <div class="talk-face" aria-label="cara hablando">
+                <span class="eye left"></span>
+                <span class="eye right"></span>
+                <span class="mouth"></span>
+              </div>
+              <div class="speech-bubble">Ideal para reírse!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PÁGINA 4: MANON LESCAUT -->
+      <div class="page" id="p4">
+        <div class="zine-card">
+          <div class="page-tag tag-pink">03 / 04 · Ópera en Concierto</div>
+          <h2 class="zine-title">🎼 Manon Lescaut</h2>
+          <p class="zine-desc">Ópera lírica dramática de Puccini en formato versión de concierto. Sin diálogos hablados: orquesta y cantantes solistas interpretando la partitura completa en vivo sobre el escenario.</p>
+          <div class="meta-box">
+            <div><strong>Lugar:</strong> Palacio Libertad (Sarmiento 151)</div>
+            <div><strong>Fechas:</strong> 6, 8, 10 y 12 Sept (Dom 17h / Mar-Jue-Sáb 20h)</div>
+            <div><strong>Estilo:</strong> Lírica italiana tradicional</div>
+          </div>
+          <div class="heart-action-row">
+            <button class="btn-heart-page" onclick="toggleLike(this, 'Manon Lescaut')">♥ Me gusta esta</button>
+            <div class="talk-wrap">
+              <div class="talk-face" aria-label="cara hablando">
+                <span class="eye left"></span>
+                <span class="eye right"></span>
+                <span class="mouth"></span>
+              </div>
+              <div class="speech-bubble">Muy intensa y con mucho drama!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PÁGINA 5: LA ÓPERA DE TRES CENTAVOS -->
+      <div class="page" id="p5">
+        <div class="zine-card blue-theme">
+          <div class="page-tag tag-blue">04 / 04 · Teatro Musical / Sátira</div>
+          <h2 class="zine-title">🎭 La ópera de 3 centavos</h2>
+          <p class="zine-desc">Clásico de Brecht/Weill precursor del musical moderno. Obra de texto que alterna actuación teatral con números musicales satíricos al estilo cabaret y jazz de los años 20.</p>
+          <div class="meta-box">
+            <div><strong>Lugar:</strong> Teatro Pte. Alvear (Av. Corrientes 1659)</div>
+            <div><strong>Horarios:</strong> Jue y Vie 20:00 hs · Sáb y Dom 19:00 hs</div>
+            <div><strong>Estilo:</strong> Teatro satírico con canciones</div>
+          </div>
+          <div class="heart-action-row">
+            <button class="btn-heart-page" onclick="toggleLike(this, 'La ópera de tres centavos')">♥ Me gusta esta</button>
+            <div class="talk-wrap">
+              <div class="talk-face" aria-label="cara hablando">
+                <span class="eye left"></span>
+                <span class="eye right"></span>
+                <span class="mouth"></span>
+              </div>
+              <div class="speech-bubble">Sátira, jazz y buen humor!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PÁGINA 6: COMPARATIVA Y CIERRE -->
+      <div class="page" id="p6">
+        <div class="zine-card" style="text-align: center;">
+          <div class="page-tag tag-pink">✦ Comparativa Final ✦</div>
+          <h2 class="zine-title" style="font-size: 1.25rem;">¿Cuál te pinta más?</h2>
+          
+          <div class="table-box">
+            <table>
+              <thead>
+                <tr>
+                  <th>Obra</th>
+                  <th>Días</th>
+                  <th>Sala</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Anastasia</strong></td><td>Mar, Mié, Sáb</td><td>Astral</td></tr>
+                <tr><td><strong>Annie</strong></td><td>Jue, Vie, Dom</td><td>Broadway</td></tr>
+                <tr><td><strong>Manon Lescaut</strong></td><td>6, 8, 10, 12 Sept</td><td>P. Libertad</td></tr>
+                <tr><td><strong>3 Centavos</strong></td><td>Jue a Dom</td><td>Alvear</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div id="selection-summary" style="font-size: 0.85rem; font-weight: bold; color: var(--heart-pink); margin-bottom: 6px; min-height: 18px;"></div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px;">Avisame cuál cuadra mejor con los francos y saco las entradas.</p>
+          
+          <a href="https://wa.me/5491151268940" id="whatsapp-link" class="btn-wa" target="_blank">Avisar por WhatsApp 💬</a>
+        </div>
+      </div>
+
+      <!-- Barra Inferior de Navegación -->
+      <div class="nav-bar">
+        <button class="btn-nav" id="btn-prev" onclick="changePage(-1)">◀ Anterior</button>
+        <span class="page-indicator" id="page-num">1 / 6</span>
+        <button class="btn-nav" id="btn-next" onclick="changePage(1)">Siguiente ▶</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const PHONE_NUMBER = "5491151268940";
+    let currentPage = 1;
+    const totalPages = 6;
+    const selectedShows = new Set();
+
+    function changePage(direction) {
+      document.getElementById(`p${currentPage}`).classList.remove('active');
+      currentPage += direction;
+      document.getElementById(`p${currentPage}`).classList.add('active');
+
+      document.getElementById('page-num').textContent = `${currentPage} / ${totalPages}`;
+      document.getElementById('btn-prev').disabled = (currentPage === 1);
+      document.getElementById('btn-next').disabled = (currentPage === totalPages);
+    }
+
+    function toggleLike(btn, showTitle) {
+      btn.classList.toggle('liked');
+
+      if (selectedShows.has(showTitle)) {
+        selectedShows.delete(showTitle);
+        btn.innerHTML = "♥ Me gusta esta";
+      } else {
+        selectedShows.add(showTitle);
+        btn.innerHTML = "❤️ ¡Elegida!";
+      }
+
+      updateWhatsAppLink();
+    }
+
+    function updateWhatsAppLink() {
+      const waBtn = document.getElementById('whatsapp-link');
+      const statusEl = document.getElementById('selection-summary');
+      const list = Array.from(selectedShows);
+
+      let msg = "";
+      if (list.length === 0) {
+        statusEl.textContent = '';
+        msg = "¡Hola! Estuve viendo la revista con las obras para mi cumple 🎭";
+      } else if (list.length === 1) {
+        statusEl.textContent = `♥ Elegiste: ${list[0]}`;
+        msg = `¡Hola! Estuve viendo la revista de opciones para mi cumple y me encantó "${list[0]}" ❤️. ¿Vemos qué fecha nos queda bien?`;
+      } else {
+        statusEl.textContent = `♥ Seleccionadas: ${list.join(', ')}`;
+        msg = `¡Hola! Estuve viendo la revista para mi cumple y me gustaron: ${list.join(' y ')} ❤️. ¿Comparamos fechas?`;
+      }
+
+      waBtn.href = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(msg)}`;
+    }
+
+    // Inicialización de controles
+    document.getElementById('btn-prev').disabled = true;
+    updateWhatsAppLink();
+  </script>
+</body>
+</html>
